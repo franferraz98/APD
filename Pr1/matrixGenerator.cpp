@@ -21,7 +21,7 @@ void all1s(ofstream& o, double prob){
     for(int i=0; i<N; i++){
         for(int j=i; j<N; j++){
             double rand = distrib(gen);
-            if(rand<prob){
+            if(rand<prob || i==j){
                 mat[i][j] = '1';
             } else {
                 mat[i][j] = '0';
@@ -43,7 +43,7 @@ void oneColumn(ofstream& o, int prod){
 
     for(int i=0; i<N; i++){
         for(int j=0; j<N; j++){
-            if(i == prod || j== prod){
+            if(i == prod || j== prod || i==j){
                 o << '1';
             } else {
                 o << '0';
