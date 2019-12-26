@@ -4,11 +4,21 @@ algortimos pseudo-aleatorios que dan lugar a los siguientes resultados:
 - Ficheros M_prob_(p)_(0..N).txt: Se generan N matrices aleatorias, 
   simétricas y de tamaño 1000x1000 en las que cada celda tiene una 
   probabilidad p de tomar valor 1. Están incluidos manualmente un 
-  fichero compuesto únicamente por 0s y otro únicamente por 1s.
+  fichero compuesto únicamente por 0s y otro únicamente por 1s. Con
+  estos ficheros se desea conseguir un conjunto aleatorio de pruebas.
 
 - Ficheros M_prodAll_(0..N).txt: Se generan N matrices aleatorias en
-  las que el elemento i (entre 0 y N) es siempre igual a 1, y todo el
-  resto de elementos son igual a 0.
+  las que la columna y fila de relaciones del elemento i (entre 0 y N)
+  es siempre igual a 1, y el resto de elementos son igual a 0. Con estos
+  ficheros se desea conseguir un conjunto de pruebas en las que un 
+  producto se compra con todos los demas, variando el producto, con lo
+  que podría dar peores o mejores resultados dependiendo de la 
+  implementación del algoritmo en particular.
 
 Nota: Siempre se considera que un objeto se compra consigo mismo, por
-lo que la diagonal principal está compuesta por 1s.
+lo que la diagonal principal está compuesta siempre por 1s.
+
+Compilación: Se ha utilizado el lenguaje c++ para la realizacion del 
+programa. Debera compilarse utilizando el siguiente comando:
+
+g++ -std=c++11 -o matrixGenerator matrixGenerator.cpp
