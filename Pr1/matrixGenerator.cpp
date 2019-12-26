@@ -61,7 +61,7 @@ int main(){
     for(double prob = 0.1; prob<=0.9; prob += 0.1){
         for(int i=0; i<rep; i++){
             string p = to_string(prob).substr(0,4);
-            string filename = "Test/M_prob_" + p + "_" + to_string(i) + ".txt"; 
+            string filename = "M_prob_" + p + "_" + to_string(i) + ".txt"; 
             ofstream o(filename, ios::trunc);
             if(o.is_open()){
                 all1s(o,prob);
@@ -73,7 +73,7 @@ int main(){
     /* All ones */
 
     string p = to_string(1.0).substr(0,4);
-    string filename = "Test/M_prob_" + p + "_" + to_string(0) + ".txt";
+    string filename = "M_prob_" + p + "_" + to_string(0) + ".txt";
     ofstream o(filename, ios::trunc);
     if(o.is_open()){
         all1s(o,1.0);
@@ -84,7 +84,7 @@ int main(){
     /* All zeroes */
 
     string p = to_string(0.0).substr(0,4);
-    string filename = "Test/M_prob_" + p + "_" + to_string(0) + ".txt";
+    string filename = "M_prob_" + p + "_" + to_string(0) + ".txt";
     o = ofstream(filename, ios::trunc);
     if(o.is_open()){
         all1s(o,0.0);
@@ -98,7 +98,7 @@ int main(){
 
     int numColAll = 10;
     for(int i=0; i<numColAll; i++){
-        filename = "Test/M_prodAll_" + to_string(i) + ".txt"; 
+        filename = "M_prodAll_" + to_string(i) + ".txt"; 
         o = ofstream (filename, ios::trunc);
 
         int prod = i * (N-1) / (numColAll-1);

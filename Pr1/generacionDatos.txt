@@ -17,3 +17,8 @@ algortimos pseudo-aleatorios que dan lugar a los siguientes resultados:
 
 Nota: Siempre se considera que un objeto se compra consigo mismo, por
 lo que la diagonal principal está compuesta siempre por 1s.
+
+Compilación: Se ha utilizado el lenguaje c++ para la realizacion del 
+programa. Debera compilarse utilizando el siguiente comando:
+
+g++ -std=c++11 -o matrixGenerator matrixGenerator.cpp
