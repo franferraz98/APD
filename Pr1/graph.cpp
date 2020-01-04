@@ -134,21 +134,17 @@ Grafo::Grafo(std::string filename){
             this->vertices.push_back(vert);
         }
 
+        // edges list
         for(int i = 0; i < N; i++){
-            for(int j = 0; j < N; j++){
-                if(mat[i][j]>0){
+            for(int j = 0; j <= i; j++){
+                
+                // Add edge as many times as indicated
+                for(int k = 0; k < mat[i][j]; k++){
                     Arista *arista = new Arista(i, j);
 
-                    //Check that edge doesnt exist already
-                    bool exists = existeArista(*arista);
-
-                    //If edge does not exist, add to edges list
-                    if(!exists){
-                        std::cout << arista->a << ", " << arista->b << std::endl;
-                        aristas.push_back(arista);
-                    } else {
-                        std::cout << "REPETIDA" << std::endl;
-                    }
+                    //Add to edges list
+                    std::cout << arista->a << ", " << arista->b << std::endl;
+                    aristas.push_back(arista);
                 }
             }
         }
