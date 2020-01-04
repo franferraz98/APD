@@ -6,7 +6,7 @@
 
 using namespace std;
 
-#define N 1000
+#define N 10
 #define rep 10
 
 void all1s(ofstream& o, double prob){
@@ -83,8 +83,8 @@ int main(){
 
     /* All zeroes */
 
-    string p = to_string(0.0).substr(0,4);
-    string filename = "M_prob_" + p + "_" + to_string(0) + ".txt";
+    p = to_string(0.0).substr(0,4);
+    filename = "M_prob_" + p + "_" + to_string(0) + ".txt";
     o = ofstream(filename, ios::trunc);
     if(o.is_open()){
         all1s(o,0.0);

@@ -10,6 +10,7 @@
 #define GRAPH_HH
 
 #include <vector>
+#include <string>
 class Arista{
 public:
     Arista(int a, int b);
@@ -42,6 +43,8 @@ class Grafo{
 public:
 
     Grafo(int V, int E);
+
+    Grafo(std::string filename);
 
     int karger();
 

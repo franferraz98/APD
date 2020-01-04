@@ -10,6 +10,8 @@
 #include <iostream>
 #include <algorithm> //std::find
 #include <random>
+#include <fstream>
+#include <string>
 
 Arista::Arista(int a, int b): a(a), b(b){
 
@@ -97,6 +99,60 @@ Grafo::Grafo(int VERT_NUM, int EDGES_NUM){
                 aristas.push_back(arista);
             }
         }
+    }
+}
+
+
+Grafo::Grafo(std::string filename){
+    std::ifstream ifs(filename);
+    if(ifs.is_open()){
+
+        std::string s;
+        getline(ifs,s);
+
+        int N = stoi(s);
+        std::cout << "Dimensions: " << N << std::endl;
+
+        int ** mat = 0;
+        mat = new int*[N];
+
+        for (int h = 0; h < N; h++) {
+            mat[h] = new int[N];
+        }
+
+        for(int i = 0; i < N; i++){
+            for(int j = 0; j<N; j++){
+                char c = ifs.get();
+                mat[i][j] = c - '0';
+            }
+        }
+
+        // initial vertices list
+        for(int i = 0; i < N; i++){
+            std::cout << "Agregando vertice " << i+1 << std::endl;
+            Conjunto *vert = new Conjunto(i+1);
+            this->vertices.push_back(vert);
+        }
+
+        for(int i = 0; i < N; i++){
+            for(int j = 0; j < N; j++){
+                if(mat[i][j]>0){
+                    Arista *arista = new Arista(i, j);
+
+                    //Check that edge doesnt exist already
+                    bool exists = existeArista(*arista);
+
+                    //If edge does not exist, add to edges list
+                    if(!exists){
+                        std::cout << arista->a << ", " << arista->b << std::endl;
+                        aristas.push_back(arista);
+                    } else {
+                        std::cout << "REPETIDA" << std::endl;
+                    }
+                }
+            }
+        }
+
     }
 }
 
