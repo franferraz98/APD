@@ -41,7 +41,7 @@ int main()
             int bestRes = INT_MAX;
             for(int i = 0; i < reps; i++){
                 auto t1 = std::chrono::high_resolution_clock::now();
-                int res = g.karger();
+                int res = g.kargerStein();
                 auto t2 = std::chrono::high_resolution_clock::now();
                 auto time = std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count();
 
