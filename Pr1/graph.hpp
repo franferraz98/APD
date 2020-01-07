@@ -24,21 +24,18 @@ public:
 class Conjunto{
 public:
 
-    // Constructores
-    Conjunto(int id);
-    Conjunto(std::vector<int> ids);
+    // Constructor
+    Conjunto();
+
+    static std::shared_ptr<Conjunto> padreMayor(std::shared_ptr<Conjunto> p);
+
+    static bool sonIguales(std::shared_ptr<Conjunto> a, std::shared_ptr<Conjunto> b);
 
     // Union de dos conjuntos de vertices
     static std::shared_ptr<Conjunto> combinar(std::shared_ptr<Conjunto> a, std::shared_ptr<Conjunto> b);
 
-    // Union de dos conjuntos de vertices
-    Conjunto operator +(Conjunto const &vert);
-    // Interseccion de dos conjuntos de vertices
-    Conjunto operator *(Conjunto const &vert);
-
-    // ATRIBUTOS
-    // Ids que contiene el vertice
-    std::vector<int> ids;
+    // Puntero a padre
+    std::shared_ptr<Conjunto> parent;
 };
 
 class Grafo{
@@ -54,7 +51,7 @@ public:
 
     bool existeArista(std::shared_ptr<Arista> a);
 
-    std::shared_ptr<Conjunto> conjuntoQueContiene(int id, int &index);
+    std::shared_ptr<Conjunto> conjuntoQueContiene(int id);
 
     // Devuelve false si las aristas pertenecen al mismo conjunto
     bool combinarConjuntos(int id_a, int id_b);

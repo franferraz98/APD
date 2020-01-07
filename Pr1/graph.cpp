@@ -18,47 +18,28 @@ Arista::Arista(int a, int b): a(a), b(b){
 
 }
 
-Conjunto::Conjunto(int id): ids({id}){
+Conjunto::Conjunto(): parent(nullptr){
 
 }
 
-Conjunto::Conjunto(std::vector<int> ids): ids({}){
-    for(int id : ids){
-        this->ids.push_back(id);
+std::shared_ptr<Conjunto> Conjunto::padreMayor(std::shared_ptr<Conjunto> p){
+    while(p->parent != nullptr){
+        p = p->parent;
     }
+    return p;
+}
+
+bool Conjunto::sonIguales(std::shared_ptr<Conjunto> a, std::shared_ptr<Conjunto> b){
+    return padreMayor(a) == padreMayor(b);
 }
 
 std::shared_ptr<Conjunto> Conjunto::combinar(std::shared_ptr<Conjunto> a, std::shared_ptr<Conjunto> b){
-    std::shared_ptr<Conjunto> res = std::make_shared<Conjunto>(a->ids);
-    for(int id : b->ids){
-        res->ids.push_back(id);
-    }
-    
+    std::shared_ptr<Conjunto> res = std::make_shared<Conjunto>();
+    padreMayor(a)->parent = res;
+    padreMayor(b)->parent = res;
     return res;
 }
 
-Conjunto Conjunto::operator +(Conjunto const &vert){
-    Conjunto res(this->ids);
-    for(int id : vert.ids){
-        res.ids.push_back(id);
-    }
-    
-    return res;
-}
-
-Conjunto Conjunto::operator *(Conjunto const &vert){
-    Conjunto res({});
-
-    for(int a : vert.ids){
-        for(int b : this->ids){
-            if(a == b){
-                res.ids.push_back(a);
-            }
-        }
-    }
-    
-    return res;
-}
 
 template <typename T>
 bool vectorContiene(std::vector<T> v, T x){
@@ -71,11 +52,12 @@ bool vectorContiene(std::vector<T> v, T x){
 
 
 Grafo::Grafo(int VERT_NUM, int EDGES_NUM){
+    this->vertices.resize(VERT_NUM);
     // initial vertices list
     for(int i = 0; i < VERT_NUM; i++){
         //std::cout << "Agregando vertice " << i+1 << std::endl;
-        std::shared_ptr<Conjunto> vert = std::make_shared<Conjunto>(i+1);
-        this->vertices.push_back(vert);
+        std::shared_ptr<Conjunto> vert = std::make_shared<Conjunto>();
+        this->vertices[i] = vert;
     }
 
     //Generate random graph
@@ -136,11 +118,12 @@ Grafo::Grafo(std::string filename){
             }
         }
 
+        this->vertices.resize(N);
         // initial vertices list
         for(int i = 0; i < N; i++){
             //std::cout << "Agregando vertice " << i+1 << std::endl;
-            std::shared_ptr<Conjunto> vert = std::make_shared<Conjunto>(i+1);
-            this->vertices.push_back(vert);
+            std::shared_ptr<Conjunto> vert = std::make_shared<Conjunto>();
+            this->vertices[i] = vert;
         }
 
         // edges list
@@ -172,15 +155,8 @@ bool Grafo::existeArista(std::shared_ptr<Arista> a){
     return false;
 }
 
-std::shared_ptr<Conjunto> Grafo::conjuntoQueContiene(int id, int &i){
-    i = 0;
-    for(std::shared_ptr<Conjunto> c : this->vertices){
-        if(vectorContiene(c->ids, id)){
-            return c;
-        }
-        i++;
-    }
-    return nullptr;
+std::shared_ptr<Conjunto> Grafo::conjuntoQueContiene(int id){
+    return vertices[id-1];
 }
 
 bool Grafo::combinarConjuntos(int id_a, int id_b){
@@ -189,28 +165,24 @@ bool Grafo::combinarConjuntos(int id_a, int id_b){
     /* std::shared_ptr<Conjunto> c_a = conjuntoQueContiene(id_a, i_a);
     std::shared_ptr<Conjunto> c_b = conjuntoQueContiene(id_b, i_b); */
 
-    std::shared_ptr<Conjunto> c_a = vertices[id_a-1];
-    std::shared_ptr<Conjunto> c_b = vertices[id_b-1];
+    std::shared_ptr<Conjunto> c_a = conjuntoQueContiene(id_a);
+    std::shared_ptr<Conjunto> c_b = conjuntoQueContiene(id_b);
 
     if(c_a != nullptr && c_b != nullptr){
         
-        if(c_a != c_b){
+        if(!Conjunto::sonIguales(c_a, c_b)){
             // Combinar los dos conjunto en uno y agregarlo al grafo
             std::shared_ptr<Conjunto> c_nuevo = Conjunto::combinar(c_a, c_b);
 
-            /* this->vertices[id_a] = c_nuevo;
-            this->vertices[id_b] = c_nuevo;
-             */
+            this->vertices[id_a-1] = c_nuevo;
+            this->vertices[id_b-1] = c_nuevo;
+             
             // Eliminar los conjuntos anteriores
             /* if(_b < i_a)
             std::swap(i_a, i_b);
 
             vertices.erase(vertices.begin() + i_a);
             vertices.erase(vertices.begin() + i_b-1); */
-
-            for(int v : c_nuevo->ids){
-                this->vertices[v-1] = c_nuevo;
-            }
 
             return true;
         }else{
@@ -348,7 +320,7 @@ int Grafo::karger(std::vector<bool> &aristasKarger, int vertices, int edges){
         std::shared_ptr<Conjunto> conjunto1 = this->vertices[(aristas[i]->a) -1];
         std::shared_ptr<Conjunto> conjunto2 = this->vertices[(aristas[i]->b) -1];
         //std::cout << aristas[i]->a << ", " << aristas[i]->b << ": " << i_1 << ", " << i_2 << std::endl;
-        if (conjunto1 != conjunto2)
+        if (!Conjunto::sonIguales(conjunto1, conjunto2))
           cutedges++;
     }
   
