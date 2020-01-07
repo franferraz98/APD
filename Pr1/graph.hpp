@@ -11,6 +11,8 @@
 
 #include <vector>
 #include <string>
+#include <memory>
+
 class Arista{
 public:
     Arista(int a, int b);
@@ -27,7 +29,7 @@ public:
     Conjunto(std::vector<int> ids);
 
     // Union de dos conjuntos de vertices
-    static Conjunto* combinar(Conjunto *a, Conjunto *b);
+    static std::shared_ptr<Conjunto> combinar(std::shared_ptr<Conjunto> a, std::shared_ptr<Conjunto> b);
 
     // Union de dos conjuntos de vertices
     Conjunto operator +(Conjunto const &vert);
@@ -46,20 +48,21 @@ public:
 
     Grafo(std::string filename);
 
+    int kargerStein();
     int karger();
 
-    bool existeArista(Arista a);
+    bool existeArista(std::shared_ptr<Arista> a);
 
-    Conjunto* conjuntoQueContiene(int id, int &index);
+    std::shared_ptr<Conjunto> conjuntoQueContiene(int id, int &index);
 
     // Devuelve false si las aristas pertenecen al mismo conjunto
     bool combinarConjuntos(int id_a, int id_b);
 
     // Vertices del grafo
-    std::vector<Conjunto*> vertices;
+    std::vector<std::shared_ptr<Conjunto>> vertices;
 
     // Aristas del grafo
-    std::vector<Arista*> aristas;
+    std::vector<std::shared_ptr<Arista>> aristas;
 };
 
 #endif

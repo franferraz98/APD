@@ -5,7 +5,10 @@
 
 #define min(a,b) (((a) < (b)) ? (a) : (b))
 #define max(a,b) (((a) > (b)) ? (a) : (b))
+
+#ifndef INT_MAX
 #define INT_MAX 2147483647
+#endif
 
 
 #define reps 15
