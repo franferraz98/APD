@@ -1,0 +1,1 @@
+echo "Generando datos..." && g++ matrixGenerator.cpp -o matrixGenerator && ./matrixGenerator && g++ matGenWeighted.cpp -o matGenWeighted && ./matGenWeighted && echo "Ejecutando algoritmo sobre datos de prueba..." && g++ ./main.cpp -o ./main && ./main

@@ -1,0 +1,33 @@
+Ferraz García, Francisco    franferrazg@gmail.com   737312
+Bernal Sierra, Félix    738059@unizar.es    738059
+
+El programa se compone de 4 ficheros utilizables:
+
+main.cpp: El programa principal. Lee todos los archivos de la carpeta Tests
+y los interpreta como matrices de enteros precedidas por una línea que indica
+las dimensiones de la misma. Mediante el algoritmo de Krager-Stein encuentra
+el mínimo corte para cada fichero realizando un número de iteraciones para
+cada uno, calculando una serie de datos.
+Presenta por pantalla datos en formato CSV con la siguiente secuencia:
+NombreFichero, dimensiones, númAristas, númVértices, tiempoMedio, tiempoMax, 
+minCut.
+
+matrixGenerator.cpp: Genera dentro de la carpeta Tests una serie de matrices de
+tamaño fijo con diferentes densidades para el problema planteado. Todas ellas 
+son matrices 1-0.
+
+matGenWeighted.cpp: Genera dentro de la carpeta Tests una serie de matrices de 
+tamaño fijo con diferentes densidades para el problema planteado. Todas ellas 
+son matrices con pesos, sus elementos van de 0 a 9.
+
+hashTest.cpp: Implementa una sencilla prueba para la tabla hash. Se puede 
+hard-codear cualquier prueba para la tabla desde el mismo, pero no se ha 
+implementado un sistema automático para lectura de ficheros.
+
+Todos los ficheros anteriores se pueden compilar desde línea de comandos 
+utilizando:
+
+g++ [fichero.cpp] -o [nombre para el ejecutable]
+
+Además, se incluyen todos los ficheros necesarios para el correcto 
+funcionamiento de los anteriores.
