@@ -224,23 +224,37 @@ int Grafo::kargerStein(){
   
     // Initially there are V vertices in 
     // contracted graph 
-    int edges = E;
+    std::vector<std::shared_ptr<Arista>> aristasKarger = this->aristas;
+    int edges = aristasKarger.size();
     int vertices = V; 
 
-    int steinLimit = 2*sqrt(V);
-  
+    int steinLimit = V/sqrt(2);
+    
     // Keep contracting vertices until there are 
     // 2 vertices. 
     while (vertices > steinLimit && edges >= 1) 
     {
         // Pick a random edge 
-        int i = rand() % E; 
+        int i = rand() % edges; 
         
-        if(this->combinarConjuntos(aristas[i]->a, aristas[i]->b)){
+        if(this->combinarConjuntos(aristasKarger[i]->a, aristasKarger[i]->b)){
             //std::cout << "Combinando (" << aristas[i]->a << ", " << aristas[i]->b << ")" << std::endl;
             vertices--;
         }
-        edges--;
+
+        //Eliminar ocurrencias de la arista
+        std::shared_ptr<Arista> a_b = aristasKarger[i];
+        int b_i = i;
+        while(b_i > 0 && aristas[i]->a == aristas[b_i]->a && aristas[i]->b == aristas[b_i]->b){
+            b_i--;
+        }
+        int e_i = i;
+        while(e_i < edges && aristas[i]->a == aristas[e_i]->a && aristas[i]->b == aristas[e_i]->b){
+            e_i++;
+        }
+
+        aristasKarger.erase(aristasKarger.begin()+b_i, aristasKarger.begin()+e_i);
+        edges -= e_i - b_i + 1;
     }
   
     // Copy current graph and apply karger twice, get best result
@@ -250,8 +264,6 @@ int Grafo::kargerStein(){
     int res2 = g2.karger();
 
     int res1 = this->karger();
-
-
 
     if(res1 < res2){
         return res1;
@@ -263,30 +275,42 @@ int Grafo::kargerStein(){
     }
 }
 
-int Grafo::karger(){
+int Grafo::karger(std::vector<std::shared_ptr<Arista>> aristasKarger){
     // Get data of given graph 
     int V = this->vertices.size();
     int E = this->aristas.size();
   
     // Initially there are V vertices in 
     // contracted graph 
-    int edges = E;
-    int vertices = V; 
-  
+    int edges = aristasKarger.size();
+    int vertices = V;
+
     // Keep contracting vertices until there are 
     // 2 vertices. 
     while (vertices > 2 && edges >= 1) 
     {
         // Pick a random edge 
-        int i = rand() % E; 
+        int i = rand() % edges; 
         
-        
-        if(this->combinarConjuntos(aristas[i]->a, aristas[i]->b)){
+        if(this->combinarConjuntos(aristasKarger[i]->a, aristasKarger[i]->b)){
             //std::cout << "Combinando (" << aristas[i]->a << ", " << aristas[i]->b << ")" << std::endl;
             vertices--;
         }
-        edges--;
+        
 
+        //Eliminar ocurrencias de la arista
+        std::shared_ptr<Arista> a_b = aristasKarger[i];
+        int b_i = i;
+        while(b_i > 0 && aristas[i]->a == aristas[b_i]->a && aristas[i]->b == aristas[b_i]->b){
+            b_i--;
+        }
+        int e_i = i;
+        while(e_i < edges && aristas[i]->a == aristas[e_i]->a && aristas[i]->b == aristas[e_i]->b){
+            e_i++;
+        }
+
+        aristasKarger.erase(aristasKarger.begin()+b_i, aristasKarger.begin()+e_i);
+        edges -= e_i - b_i + 1;
     } 
   
     // Now we have two vertices (or subsets) left in 
@@ -304,5 +328,9 @@ int Grafo::karger(){
     }
   
     return cutedges; 
+}
+
+int Grafo::karger(){
+    return this->karger(this->aristas);
 }
 

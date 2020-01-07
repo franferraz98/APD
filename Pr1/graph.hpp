@@ -49,6 +49,7 @@ public:
     Grafo(std::string filename);
 
     int kargerStein();
+    int karger(std::vector<std::shared_ptr<Arista>> aristasRestantes);
     int karger();
 
     bool existeArista(std::shared_ptr<Arista> a);
