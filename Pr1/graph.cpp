@@ -184,25 +184,33 @@ std::shared_ptr<Conjunto> Grafo::conjuntoQueContiene(int id, int &i){
 }
 
 bool Grafo::combinarConjuntos(int id_a, int id_b){
-    int i_a, i_b;
+    //int i_a, i_b;
     //std::cout << "buscar " << id_a << ", " << id_b << std::endl;
-    std::shared_ptr<Conjunto> c_a = conjuntoQueContiene(id_a, i_a);
-    std::shared_ptr<Conjunto> c_b = conjuntoQueContiene(id_b, i_b);
+    /* std::shared_ptr<Conjunto> c_a = conjuntoQueContiene(id_a, i_a);
+    std::shared_ptr<Conjunto> c_b = conjuntoQueContiene(id_b, i_b); */
+
+    std::shared_ptr<Conjunto> c_a = vertices[id_a-1];
+    std::shared_ptr<Conjunto> c_b = vertices[id_b-1];
 
     if(c_a != nullptr && c_b != nullptr){
         
-        if(i_a != i_b){
+        if(c_a != c_b){
             // Combinar los dos conjunto en uno y agregarlo al grafo
             std::shared_ptr<Conjunto> c_nuevo = Conjunto::combinar(c_a, c_b);
 
-            this->vertices.push_back(c_nuevo);
-
+            /* this->vertices[id_a] = c_nuevo;
+            this->vertices[id_b] = c_nuevo;
+             */
             // Eliminar los conjuntos anteriores
-            if(i_b < i_a)
+            /* if(_b < i_a)
             std::swap(i_a, i_b);
 
             vertices.erase(vertices.begin() + i_a);
-            vertices.erase(vertices.begin() + i_b-1);
+            vertices.erase(vertices.begin() + i_b-1); */
+
+            for(int v : c_nuevo->ids){
+                this->vertices[v-1] = c_nuevo;
+            }
 
             return true;
         }else{
@@ -218,14 +226,17 @@ bool Grafo::combinarConjuntos(int id_a, int id_b){
 }
 
 int Grafo::kargerStein(){
+    //std::cout << "Adios" << std::endl;
     // Get data of given graph 
     int V = this->vertices.size();
     int E = this->aristas.size();
   
     // Initially there are V vertices in 
     // contracted graph 
-    std::vector<std::shared_ptr<Arista>> aristasKarger = this->aristas;
-    int edges = aristasKarger.size();
+    std::vector<bool> aristasKarger;
+    aristasKarger.resize(E,false);
+
+    int edges = E;
     int vertices = V; 
 
     int steinLimit = V/sqrt(2);
@@ -235,25 +246,31 @@ int Grafo::kargerStein(){
     while (vertices > steinLimit && edges >= 1) 
     {
         // Pick a random edge 
-        int i = rand() % edges; 
-        
-        if(this->combinarConjuntos(aristasKarger[i]->a, aristasKarger[i]->b)){
+        int i = rand() % E; 
+        while(aristasKarger[i]){
+            //std::cout << "Hola: " << i << std::endl;
+            i = (i+1)%E;
+        }
+
+        if(this->combinarConjuntos(aristas[i]->a, aristas[i]->b)){
             //std::cout << "Combinando (" << aristas[i]->a << ", " << aristas[i]->b << ")" << std::endl;
             vertices--;
         }
+        
 
         //Eliminar ocurrencias de la arista
-        std::shared_ptr<Arista> a_b = aristasKarger[i];
+        aristasKarger[i] = true;
         int b_i = i;
-        while(b_i > 0 && aristas[i]->a == aristas[b_i]->a && aristas[i]->b == aristas[b_i]->b){
+        while(b_i > 0 && aristas[i]->a == aristas[b_i-1]->a && aristas[i]->b == aristas[b_i-1]->b){
             b_i--;
+            aristasKarger[b_i] = true;
         }
         int e_i = i;
-        while(e_i < edges && aristas[i]->a == aristas[e_i]->a && aristas[i]->b == aristas[e_i]->b){
+        while(e_i < edges-1 && aristas[i]->a == aristas[e_i+1]->a && aristas[i]->b == aristas[e_i+1]->b){
             e_i++;
+            aristasKarger[e_i] = true;
         }
 
-        aristasKarger.erase(aristasKarger.begin()+b_i, aristasKarger.begin()+e_i);
         edges -= e_i - b_i + 1;
     }
   
@@ -261,9 +278,10 @@ int Grafo::kargerStein(){
     Grafo g2(*this);
     g2.vertices = this->vertices;
     g2.aristas = this->aristas;
-    int res2 = g2.karger();
+    std::vector<bool> aristasKargerAux = aristasKarger;
+    int res2 = g2.karger(aristasKargerAux, vertices, edges);
 
-    int res1 = this->karger();
+    int res1 = this->karger(aristasKarger, vertices, edges);
 
     if(res1 < res2){
         return res1;
@@ -275,42 +293,50 @@ int Grafo::kargerStein(){
     }
 }
 
-int Grafo::karger(std::vector<std::shared_ptr<Arista>> aristasKarger){
+int Grafo::karger(std::vector<bool> &aristasKarger, int vertices, int edges){
+
+    //std::cout << "Hola" << std::endl;
     // Get data of given graph 
     int V = this->vertices.size();
     int E = this->aristas.size();
   
     // Initially there are V vertices in 
     // contracted graph 
-    int edges = aristasKarger.size();
-    int vertices = V;
+    //int edges = E;
+    //int vertices = V;
 
     // Keep contracting vertices until there are 
     // 2 vertices. 
     while (vertices > 2 && edges >= 1) 
     {
         // Pick a random edge 
-        int i = rand() % edges; 
-        
-        if(this->combinarConjuntos(aristasKarger[i]->a, aristasKarger[i]->b)){
+        int i = rand() % E; 
+        while(aristasKarger[i]){
+            //std::cout << "Hola: " << i << std::endl;
+            i = (i+1)%E;
+        }
+
+        if(this->combinarConjuntos(aristas[i]->a, aristas[i]->b)){
             //std::cout << "Combinando (" << aristas[i]->a << ", " << aristas[i]->b << ")" << std::endl;
             vertices--;
         }
         
 
         //Eliminar ocurrencias de la arista
-        std::shared_ptr<Arista> a_b = aristasKarger[i];
+        aristasKarger[i] = true;
         int b_i = i;
-        while(b_i > 0 && aristas[i]->a == aristas[b_i]->a && aristas[i]->b == aristas[b_i]->b){
+        while(b_i > 0 && aristas[i]->a == aristas[b_i-1]->a && aristas[i]->b == aristas[b_i-1]->b){
             b_i--;
+            aristasKarger[b_i] = true;
         }
         int e_i = i;
-        while(e_i < edges && aristas[i]->a == aristas[e_i]->a && aristas[i]->b == aristas[e_i]->b){
+        while(e_i < edges-1 && aristas[i]->a == aristas[e_i+1]->a && aristas[i]->b == aristas[e_i+1]->b){
             e_i++;
+            aristasKarger[e_i] = true;
         }
 
-        aristasKarger.erase(aristasKarger.begin()+b_i, aristasKarger.begin()+e_i);
         edges -= e_i - b_i + 1;
+        //edges--;
     } 
   
     // Now we have two vertices (or subsets) left in 
@@ -319,11 +345,10 @@ int Grafo::karger(std::vector<std::shared_ptr<Arista>> aristasKarger){
     int cutedges = 0;
     for (int i=0; i<E; i++)
     {
-        int i_1, i_2;
-        std::shared_ptr<Conjunto> conjunto1 = conjuntoQueContiene(aristas[i]->a, i_1);
-        std::shared_ptr<Conjunto> conjunto2 = conjuntoQueContiene(aristas[i]->b, i_2);
+        std::shared_ptr<Conjunto> conjunto1 = this->vertices[(aristas[i]->a) -1];
+        std::shared_ptr<Conjunto> conjunto2 = this->vertices[(aristas[i]->b) -1];
         //std::cout << aristas[i]->a << ", " << aristas[i]->b << ": " << i_1 << ", " << i_2 << std::endl;
-        if (i_1 != i_2)
+        if (conjunto1 != conjunto2)
           cutedges++;
     }
   
@@ -331,6 +356,8 @@ int Grafo::karger(std::vector<std::shared_ptr<Arista>> aristasKarger){
 }
 
 int Grafo::karger(){
-    return this->karger(this->aristas);
+    std::vector<bool> aristasKarger;
+    aristasKarger.resize(this->aristas.size(),false);
+    return this->karger(aristasKarger, this->vertices.size(), this->aristas.size());
 }
 

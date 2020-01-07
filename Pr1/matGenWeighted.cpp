@@ -5,7 +5,7 @@
 #include <string>
 #include <chrono>
 
-#define N 100
+#define N 150
 #define K 15
 
 using namespace std;

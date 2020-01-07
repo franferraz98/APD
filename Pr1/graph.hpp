@@ -49,7 +49,7 @@ public:
     Grafo(std::string filename);
 
     int kargerStein();
-    int karger(std::vector<std::shared_ptr<Arista>> aristasRestantes);
+    int karger(std::vector<bool> &aristasRestantes, int vertices, int edges);
     int karger();
 
     bool existeArista(std::shared_ptr<Arista> a);
@@ -64,6 +64,7 @@ public:
 
     // Aristas del grafo
     std::vector<std::shared_ptr<Arista>> aristas;
+
 };
 
 #endif

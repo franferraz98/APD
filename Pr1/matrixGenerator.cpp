@@ -6,7 +6,7 @@
 
 using namespace std;
 
-#define N 100
+#define N 150
 #define rep 10
 
 void all1s(ofstream& o, double prob){

@@ -11,7 +11,7 @@
 #endif
 
 
-#define reps 15
+#define reps 5
 
 // Driver program to test above functions 
 int main() 
@@ -29,19 +29,23 @@ int main()
         tinydir_file file;
         tinydir_readfile(&dir, &file);
         if(!file.is_dir){
-            std::cout << file.path << " " << std::flush;
+            std::cout << file.path << "," << std::flush;
 
             std::string s = file.path;
             Grafo g(s);
             int N = g.vertices.size();
-            std::cout << " N: " << N << std::flush ;
+            std::cout << N << "," << std::flush ;
 
             auto totalTime = 0;
             auto maxTime = 0;
             int bestRes = INT_MAX;
             for(int i = 0; i < reps; i++){
+
+                Grafo g2(g);
+                g2.vertices = g.vertices;
+                g2.aristas = g.aristas;
                 auto t1 = std::chrono::high_resolution_clock::now();
-                int res = g.kargerStein();
+                int res = g2.kargerStein();
                 auto t2 = std::chrono::high_resolution_clock::now();
                 auto time = std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count();
 
@@ -53,7 +57,7 @@ int main()
             auto avgTime = totalTime / reps;
             
 
-            std::cout << ", Avg: " << avgTime  << "ms Max: " << maxTime << "ms , Cut: " << bestRes << std::endl; 
+            std::cout << g.aristas.size() << "," << g.vertices.size() << "," << avgTime  << "," << maxTime << "," << bestRes << std::endl; 
         }
         tinydir_next(&dir);
     }
