@@ -6,13 +6,13 @@
 #include <chrono>
 
 #define N 100
+#define K 15
 
 using namespace std;
 
 int** create2DArray(unsigned height, unsigned width)
 {
-    random_device dev;
-    mt19937 gen(dev());
+    mt19937 gen(chrono::high_resolution_clock::now().time_since_epoch().count());
     uniform_int_distribution<int> distrib(0,10);
     int** array2D = 0;
     array2D = new int*[height];
@@ -37,33 +37,33 @@ int main(){
 
     auto t1 = chrono::high_resolution_clock::now();
 
-    int** my2DArray = create2DArray(N, N);
+    for(int i = 0; i<K; i++){
+        int** my2DArray = create2DArray(N, N);
 
-    string filename = "Tests/pesos.txt";
-    ofstream o(filename, ios::trunc);
+        string filename = "Tests/pesos" + to_string(i) + ".txt";
+        ofstream o(filename, ios::trunc);
 
-    o << std::to_string(N) << "\n";
-    for (int h = 0; h < N; h++)
-    {
-        for (int w = 0; w < N; w++)
+        o << std::to_string(N) << "\n";
+        for (int h = 0; h < N; h++)
         {
-            o << (unsigned char)('0' + my2DArray[h][w]%10);
+            for (int w = 0; w < N; w++)
+            {
+                o << (unsigned char)('0' + my2DArray[h][w]%10);
+            }
+            o << '\n';
         }
-        o << '\n';
+
+        o << "\0";
+
+        for (int  h = 0; h < N; h++)
+        {
+        delete [] my2DArray[h];
+        }
+        delete [] my2DArray;
+        my2DArray = 0;
     }
 
-    o << "\0";
-
-    // important: clean up memory
-    printf("\n");
-    printf("Cleaning up memory...\n");
-    for (int  h = 0; h < N; h++)
-    {
-    delete [] my2DArray[h];
-    }
-    delete [] my2DArray;
-    my2DArray = 0;
-    printf("Ready.\n");
+    
 
     auto t2 = chrono::high_resolution_clock::now();
 
