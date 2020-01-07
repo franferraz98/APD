@@ -5,7 +5,7 @@
 #include <string>
 #include <chrono>
 
-#define N 3
+#define N 100
 
 using namespace std;
 
@@ -39,14 +39,20 @@ int main(){
 
     int** my2DArray = create2DArray(N, N);
 
+    string filename = "Tests/pesos.txt";
+    ofstream o(filename, ios::trunc);
+
+    o << std::to_string(N) << "\n";
     for (int h = 0; h < N; h++)
     {
         for (int w = 0; w < N; w++)
         {
-                printf("%i,", my2DArray[h][w]);
+            o << (unsigned char)('0' + my2DArray[h][w]%10);
         }
-        printf("\n");
+        o << '\n';
     }
+
+    o << "\0";
 
     // important: clean up memory
     printf("\n");

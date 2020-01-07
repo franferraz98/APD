@@ -72,14 +72,14 @@ bool vectorContiene(std::vector<T> v, T x){
 Grafo::Grafo(int VERT_NUM, int EDGES_NUM){
     // initial vertices list
     for(int i = 0; i < VERT_NUM; i++){
-        std::cout << "Agregando vertice " << i+1 << std::endl;
+        //std::cout << "Agregando vertice " << i+1 << std::endl;
         Conjunto *vert = new Conjunto(i+1);
         this->vertices.push_back(vert);
     }
 
     //Generate random graph
     for(int i = 0; i < EDGES_NUM; i++){
-        std::cout << "Agregando arista " << i+1 << std::endl;
+        //std::cout << "Agregando arista " << i+1 << std::endl;
         bool exists = true;
         while(exists){
             // Generate random edge
@@ -95,7 +95,7 @@ Grafo::Grafo(int VERT_NUM, int EDGES_NUM){
 
             //If edge does not exist, add to edges list
             if(!exists){
-                std::cout << arista->a << ", " << arista->b << std::endl;
+                //std::cout << arista->a << ", " << arista->b << std::endl;
                 aristas.push_back(arista);
             }
         }
@@ -111,7 +111,7 @@ Grafo::Grafo(std::string filename){
         getline(ifs,s);
 
         int N = stoi(s);
-        std::cout << "Dimensions: " << N << std::endl;
+        //std::cout << "Dimensions: " << N << std::endl;
 
         int ** mat = 0;
         mat = new int*[N];
@@ -122,33 +122,43 @@ Grafo::Grafo(std::string filename){
 
         for(int i = 0; i < N; i++){
             for(int j = 0; j<N; j++){
+                // Leer caracter (1 o 0)
                 char c = ifs.get();
+
+                // Saltar espacios, tabuladores, saltos de linea...
+                while(c == ' ' || c == '\n' || c == '\t'){
+                    c = ifs.get();
+                }
+
+
                 mat[i][j] = c - '0';
             }
         }
 
         // initial vertices list
         for(int i = 0; i < N; i++){
-            std::cout << "Agregando vertice " << i+1 << std::endl;
+            //std::cout << "Agregando vertice " << i+1 << std::endl;
             Conjunto *vert = new Conjunto(i+1);
             this->vertices.push_back(vert);
         }
 
         // edges list
+        aristas = {};
         for(int i = 0; i < N; i++){
             for(int j = 0; j <= i; j++){
                 
                 // Add edge as many times as indicated
                 for(int k = 0; k < mat[i][j]; k++){
-                    Arista *arista = new Arista(i, j);
-
-                    //Add to edges list
-                    std::cout << arista->a << ", " << arista->b << std::endl;
-                    aristas.push_back(arista);
+                    if( i != j){
+                        Arista *arista = new Arista(i+1, j+1);
+                        //Add to edges list
+                        //std::cout << arista->a << ", " << arista->b << std::endl;
+                        aristas.push_back(arista);
+                    }
+                    
                 }
             }
         }
-
     }
 }
 
@@ -174,7 +184,7 @@ Conjunto* Grafo::conjuntoQueContiene(int id, int &i){
 
 bool Grafo::combinarConjuntos(int id_a, int id_b){
     int i_a, i_b;
-    std::cout << "buscar " << id_a << ", " << id_b << std::endl;
+    //std::cout << "buscar " << id_a << ", " << id_b << std::endl;
     Conjunto *c_a = conjuntoQueContiene(id_a, i_a);
     Conjunto *c_b = conjuntoQueContiene(id_b, i_b);
 
@@ -196,7 +206,7 @@ bool Grafo::combinarConjuntos(int id_a, int id_b){
 
             return true;
         }else{
-            std::cout << "Mismo conjunto" << std::endl;
+            //std::cout << "Mismo conjunto" << std::endl;
             // Vertices estan en el mismo conjunto
             return false;
         }
@@ -214,20 +224,23 @@ int Grafo::karger(){
   
     // Initially there are V vertices in 
     // contracted graph 
+    int edges = E;
     int vertices = V; 
   
     // Keep contracting vertices until there are 
     // 2 vertices. 
-    while (vertices > 2) 
+    while (vertices > 2 && edges >= 1) 
     {
         // Pick a random edge 
         int i = rand() % E; 
         
         
         if(this->combinarConjuntos(aristas[i]->a, aristas[i]->b)){
-            std::cout << "Combinando (" << aristas[i]->a << ", " << aristas[i]->b << ")" << std::endl;
+            //std::cout << "Combinando (" << aristas[i]->a << ", " << aristas[i]->b << ")" << std::endl;
             vertices--;
         }
+        edges--;
+
     } 
   
     // Now we have two vertices (or subsets) left in 
@@ -239,7 +252,7 @@ int Grafo::karger(){
         int i_1, i_2;
         Conjunto* conjunto1 = conjuntoQueContiene(aristas[i]->a, i_1);
         Conjunto* conjunto2 = conjuntoQueContiene(aristas[i]->b, i_2);
-        std::cout << aristas[i]->a << ", " << aristas[i]->b << ": " << i_1 << ", " << i_2 << std::endl;
+        //std::cout << aristas[i]->a << ", " << aristas[i]->b << ": " << i_1 << ", " << i_2 << std::endl;
         if (i_1 != i_2)
           cutedges++;
     }
