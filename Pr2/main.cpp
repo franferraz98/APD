@@ -6,6 +6,9 @@ using namespace std;
 
 int main(){
     string s = "abaaba";
+
+    VectorSufijos v(s.c_str());    
+
     string res = BurrowsWheeler::compress(s.c_str());
     cout << res << endl;
 
