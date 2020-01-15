@@ -7,80 +7,40 @@
 typedef std::tuple<char, char> tuplaChars;
 typedef std::tuple<char, int> tuplaCharIndex;
 
-char BurrowsWheeler::caracter(const VectorSufijos &v, const int i, const int j){
-    return v[(i+j)%v.len()][0];
-}
-
-std::string BurrowsWheeler::columna(const VectorSufijos &v, const int i){
+std::string BurrowsWheeler::columna(const VectorSufijos &v, const int c){
+    // Devolver ultima columna de la matriz de Burrows
     std::string res = "";
-    for(int j = 0; j < v.len(); j++){
-        res += caracter(v, i, j);
+    for(int i = 0; i < v.len(); i++){
+        res += v.sufijo(0)[(c+v.indice(i)) % (v.len())];
     }
     return res;
 }
 
-bool firstCharLessThan(tuplaChars a, tuplaChars b){ return std::get<0>(a) < std::get<0>(b);}
 bool compCharIndex(tuplaCharIndex a, tuplaCharIndex b){ return std::get<0>(a) < std::get<0>(b);}
 
 std::string BurrowsWheeler::compress(const char * c){
+    // Crear vector de sufijos
     VectorSufijos v(c);
 
-    // Crear un array con los indices de los sufijos en la matriz de burrows wheeler
-    std::vector<int> indices;
-    indices.resize(v.len()+1);
+    // Ordenar sufijos alfabeticamente
+    v.ordenar();
 
-    //int indices[v.len()];
-    for(int i = 0; i <= v.len(); i++) {
-        indices[i] = i;
-    }
-
-    // Ordenar esos indices segun los sufijos en orden alfabetico
-    std::sort(indices.begin(), indices.end(), [c](int a, int b) {return strcmp(c+a, c+b) < 0;});
-
-    // Devolver ultima columna 
-    std::string res = "";
-    for(int i = 0; i <= v.len(); i++){
-        res += v[0][(v.len()+indices[i]) % (v.len()+1)];
-    } 
+    // Devolver ultima columna de la matriz de Burrows correspondiente
+    std::string res = columna(v, v.len()-1);
 
     return res;
-
-    std::string primCol = columna(v, 0);
-    std::string ultCol = columna(v, v.len()-1);
-
-
-
-    // char array[v.len()][2];
-
-    std::vector<tuplaChars> array;
-    array.resize(v.len());
-
-    for(int i = 0; i < v.len(); i++) {
-        array[i] = tuplaChars (ultCol[(i+1)%v.len()], primCol[(i+1)%v.len()]);
-    }
-
-    std::sort(array.begin(), array.end(), firstCharLessThan);
-    
-    for (int j = 0; j < v.len(); j++) {
-        primCol[j] = std::get<0>(array[j]);
-        ultCol[j] = std::get<1>(array[j]);
-    }
-    std::cout << "Prim: " << primCol << std::endl;
-
-    return ultCol;
 }
 
 std::string BurrowsWheeler::decompress(const char * c){
-    
     int l = strlen(c);
 
-    // Ordernar texto para sacar columna izda (guardando indices de col dcha)
+    // Crear columna izda (guardando indices en col dcha)
     std::vector<tuplaCharIndex> colIzda;
     colIzda.resize(l);
-
     for(int i = 0; i < l; i++) {
         colIzda[i] = tuplaCharIndex(c[i], i);
     }
+    // Ordenar en orden alfabetico
     std::sort(colIzda.begin(), colIzda.end(), compCharIndex);
     
     // Reconstruir la cadena original iterando la columna de la izda
