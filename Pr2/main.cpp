@@ -5,11 +5,11 @@
 using namespace std;
 
 int main(){
-    string s = "Tomorrow_and_tomorrow_and_tomorrow$";
+    string s = "abaaba";
     string res = BurrowsWheeler::compress(s.c_str());
     cout << res << endl;
 
-    string dec = BurrowsWheeler::decompress(res.c_str(), s[0]);
+    string dec = BurrowsWheeler::decompress(res.c_str());
 
     cout << dec << endl;
 
