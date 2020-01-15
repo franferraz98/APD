@@ -7,11 +7,15 @@
 typedef std::tuple<char, char> tuplaChars;
 typedef std::tuple<char, int> tuplaCharIndex;
 
+char BurrowsWheeler::caracter(const VectorSufijos &v, const int i, const int j){
+    return v.sufijo(0)[(i+v.indice(j)) % (v.len())];
+}
+
 std::string BurrowsWheeler::columna(const VectorSufijos &v, const int c){
     // Devolver ultima columna de la matriz de Burrows
     std::string res = "";
     for(int i = 0; i < v.len(); i++){
-        res += v.sufijo(0)[(c+v.indice(i)) % (v.len())];
+        res += BurrowsWheeler::caracter(v, c, i);
     }
     return res;
 }
