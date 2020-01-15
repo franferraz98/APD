@@ -4,8 +4,10 @@
 
 VectorSufijos::VectorSufijos(const char * c){
     int l = strlen(c);
-    this->cad = (char*)malloc(l*sizeof(char));
+    this->cad = (char*)malloc(l*sizeof(char)+1);
     strcpy(this->cad,c);
+    this->cad[l] = '$';
+    this->cad[l+1] = '\0';
     this->tam = l;
 }
 
