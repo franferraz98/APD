@@ -9,16 +9,22 @@ struct Sufijo
 
 class VectorSufijos {
 protected:
+    int * indices;
     char * cad;        
     int tam;
-    int * vs;
-    int numElem;
+
+
 public:
     VectorSufijos(const char * c);
     ~VectorSufijos();
     int len() const;
-    const char * operator[](const int idx) const;
+
     void print();
+    void ordenar();
+    int indice(int idx) const;
+
+    const char * operator[](const int idx) const;
+    const char * sufijo(const int id) const;
 };
 
 #endif
