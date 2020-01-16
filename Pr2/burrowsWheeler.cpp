@@ -20,7 +20,7 @@ std::string BurrowsWheeler::columna(const VectorSufijos &v, const int c){
     return res;
 }
 
-bool compCharIndex(tuplaCharIndex a, tuplaCharIndex b){ return std::get<0>(a) < std::get<0>(b);}
+bool compCharIndex(tuplaCharIndex a, tuplaCharIndex b){ return std::get<0>(a) < std::get<0>(b) || (std::get<0>(a) == std::get<0>(b) && std::get<1>(a) < std::get<1>(b));}
 
 std::string BurrowsWheeler::compress(const char * c){
     // Crear vector de sufijos
@@ -47,13 +47,26 @@ std::string BurrowsWheeler::decompress(const char * c){
     // Ordenar en orden alfabetico
     std::sort(colIzda.begin(), colIzda.end(), compCharIndex);
     
-    // Reconstruir la cadena original iterando la columna de la izda
+    // Buscar principio de la cadena (caracter dolar)
     std::string res(c);
-    int buscar = 0;
-    buscar = std::get<1>(colIzda[buscar]);
+    int idxIzda = 0;
+    bool found = false;
     for(int i = 0; i < l; i++){
-        res[i] = std::get<0>(colIzda[buscar]);
-        buscar = std::get<1>(colIzda[buscar]);
+        if(std::get<0>(colIzda[i]) == '$'){
+            idxIzda = i;
+            found = true;
+            break;
+        }
+    }
+    if (!found){
+        throw;
+    }
+
+    // Reconstruir la cadena original iterando la columna de la izda
+    idxIzda = std::get<1>(colIzda[idxIzda]);
+    for(int i = 0; i < l; i++){
+        res[i] = std::get<0>(colIzda[idxIzda]);
+        idxIzda = std::get<1>(colIzda[idxIzda]);
     }
     
     // Eliminar el caracter $ del final
