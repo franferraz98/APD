@@ -24,7 +24,7 @@ char * MoveToFront::compress(const char * c, const int l){
         list[i] = (unsigned char)((i + 32)%256);
     }
 
-    char *res = (char *)malloc(l * sizeof(char));
+    char *res = (char *)malloc((l+1) * sizeof(char));
     for(int i = 0; i < l; i++){
         // Buscar indice del caracter
         unsigned int idx = indexOf(list, c[i]);
@@ -35,6 +35,8 @@ char * MoveToFront::compress(const char * c, const int l){
         // Move to front
         moveToFront(list, idx); 
     }
+    
+    res[l] = '\0';
 
     return res;
 }
