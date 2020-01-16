@@ -2,6 +2,11 @@
 #include <algorithm>
 #include <string.h>
 #include <stdlib.h>
+#include <algorithm>
+#include <iostream>
+
+bool comparaSufijos(struct Sufijo a, struct Sufijo b){ return (a.rango[0] == b.rango[0])? (a.rango[1] < b.rango[1] ?1: 0): 
+               (a.rango[0] < b.rango[0] ?1: 0); }
 
 
 void VectorSufijos::ordenar(){
@@ -44,4 +49,11 @@ const char * VectorSufijos::operator[](const int idx) const{
 }
 const char * VectorSufijos::sufijo(const int id) const{
     return this->cad+id;
+}
+
+void VectorSufijos::print() {
+    for(int i=0; i<this->tam; i++){
+        std::cout << indices[i];
+    }
+    std::cout << std::endl;
 }

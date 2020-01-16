@@ -1,7 +1,7 @@
 #include "moveToFront.hpp"
 
-int MoveToFront::indexOf(const char list[256], char c){
-    for(int i = 0; i < 256; i++){
+unsigned int MoveToFront::indexOf(const char list[256], char c){
+    for(unsigned int i = 0; i < 256; i++){
         if(list[i] == c){
             return i;
         }
@@ -17,28 +17,47 @@ void MoveToFront::moveToFront(char list[256], int idx){
     list[0] = c;
 }
 
-std::string MoveToFront::compress(const char * c){
+char * MoveToFront::compress(const char * c, const int l){
     // Crear lista de caracteres inicial
     char list[256];
-    for(int i = 0; i < 256; i++){
-        list[i] = (char)i;
+    for(unsigned int i = 0; i < 256; i++){
+        list[i] = (unsigned char)i;
     }
 
-    std::string res(c);
-    for(int i = 0; c[i] != '\0'; i++){
-        
+    char *res = (char *)malloc(l * sizeof(char));
+    for(int i = 0; i < l; i++){
         // Buscar indice del caracter
-        int idx = indexOf(list, c[i]);
+        unsigned int idx = indexOf(list, c[i]);
 
         // Guardar indice en el resultado
-        res[i] = (char)idx; 
-        //std::cout << idx << ", ";
+        res[i] = (unsigned char)(idx);
   
         // Move to front
         moveToFront(list, idx); 
     }
-    //std::cout << std::endl;
 
     return res;
+}
 
+char * MoveToFront::decompress(const char * c, const int l){
+    // Crear lista de caracteres inicial
+    char list[256];
+    for(unsigned int i = 0; i < 256; i++){
+        list[i] = (unsigned char)i;
+    }
+
+    char *res = (char *)malloc((l+1) * sizeof(char));
+    for(int i = 0; i < l; i++){
+        // Buscar indice del caracter
+        unsigned int idx = (unsigned int)((unsigned char)c[i]);
+
+        // Guardar indice en el resultado
+        res[i] = list[idx];
+  
+        // Move to front
+        moveToFront(list, idx); 
+    }
+    res[l] = '\0';
+
+    return res;
 }

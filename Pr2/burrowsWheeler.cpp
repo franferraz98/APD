@@ -29,6 +29,8 @@ std::string BurrowsWheeler::compress(const char * c){
     // Ordenar sufijos alfabeticamente
     v.ordenar();
 
+    v.print();
+
     // Devolver ultima columna de la matriz de Burrows correspondiente
     std::string res = columna(v, v.len()-1);
 
