@@ -2,34 +2,40 @@
 #include <string>
 #include "burrowsWheeler.cpp"
 #include "moveToFront.cpp"
-#include "huffman.cpp"
+#include "huffmanCoding.cpp"
 
 using namespace std;
 
+double compressionRatio(string s){
+    // BURROWS-WHEELER
+    string comp = BurrowsWheeler::compress(s.c_str());
+    //MTF
+    char *movComp = MoveToFront::compress(comp.c_str(), comp.length());
+    //HUFFMAN
+    Huffman h1(movComp);
+
+	string huffCod = h1.encode(movComp);
+    double ratio = (double)((huffCod.length()+7) / 8)/s.length();
+
+     //HUFFMAN
+	string huffDec = h1.decode(huffCod);    
+
+    //MTF
+    char *movDec = MoveToFront::decompress(huffDec.c_str(), comp.length());
+    
+    //BURROWS-WHEELER
+    string dec = BurrowsWheeler::decompress(movDec);
+    if(strcmp(s.c_str(), dec.c_str()) != 0){
+        throw;
+    }
+    return ratio;
+}
+
 int main(){
 
-    string s = "Tomorrow_and_tomorrow_and_tomorrow";
-    string comp = BurrowsWheeler::compress(s.c_str());
-    //cout << comp << endl;
+    string s = "aaaaaaaaaaaaaaaaa";
 
-    char *movComp = MoveToFront::compress(comp.c_str(), comp.length());
-
-    char *movDec = MoveToFront::decompress(movComp, comp.length());
-    //cout << movDec << endl;
-
-    string dec = BurrowsWheeler::decompress(movDec);
-    cout << dec << endl;
-
-    
-    huffman h1("encode.txt", "decode.txt");
-	h1.create_pq();
-	h1.create_huffman_tree();
-	h1.calculate_huffman_codes();
-	h1.coding_save();
-
-    huffman h2("decode.txt", "result.txt");
-	h2.recreate_huffman_tree();
-	h2.decoding_save();
+    cout << "Compression ratio: " << compressionRatio(s) << endl;
 
     return 0;
 }
