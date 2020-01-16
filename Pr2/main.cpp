@@ -5,9 +5,11 @@
 using namespace std;
 
 int main(){
-    string s = "abaaba";
+    string s = "Tomorrow_and_tomorrow_and_tomorrow";
 
-    VectorSufijos v(s.c_str());    
+    VectorSufijos v(s.c_str());
+
+    v.print();
 
     string res = BurrowsWheeler::compress(s.c_str());
     cout << res << endl;

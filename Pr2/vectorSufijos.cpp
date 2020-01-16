@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <algorithm>
+#include <iostream>
 
 bool comparaSufijos(struct Sufijo a, struct Sufijo b){ return (a.rango[0] == b.rango[0])? (a.rango[1] < b.rango[1] ?1: 0): 
                (a.rango[0] < b.rango[0] ?1: 0); }
@@ -9,8 +10,10 @@ bool comparaSufijos(struct Sufijo a, struct Sufijo b){ return (a.rango[0] == b.r
 VectorSufijos::VectorSufijos(const char * c){
 
     int m = strlen(c);
-    this->cad = (char*)malloc(m*sizeof(char));
+    this->cad = (char*)malloc(m*sizeof(char)+1);
     strcpy(this->cad,c);
+    this->cad[m] = '$';
+    this->cad[m+1] = '\0';
     this->tam = m;
 
     int l = strlen(c);
@@ -74,8 +77,16 @@ VectorSufijos::VectorSufijos(const char * c){
     }
 }
 
+void VectorSufijos::print(){
+    for (int i = 0; i < numElem; i++) {
+        std::cout << vs[i] << " "; 
+    }
+    std::cout << std::endl; 
+}
+
 VectorSufijos::~VectorSufijos(){
     delete(this->cad);
+    delete(this->vs);
 }
 
 int VectorSufijos::len() const {

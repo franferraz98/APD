@@ -18,6 +18,7 @@ public:
     ~VectorSufijos();
     int len() const;
     const char * operator[](const int idx) const;
+    void print();
 };
 
 #endif
