@@ -41,6 +41,11 @@ struct HuffTreeNode
         this -> letter = c;
         this -> parent = this -> l = this -> r = NULL;
     }
+
+    ~HuffTreeNode(){
+        delete(this->l);
+        delete(this->r);
+    }
 };
 
 // Comparator of two node pointers
@@ -56,7 +61,8 @@ struct CmpNodePtrs
 };
 
     Huffman(string s);
-    
+    ~Huffman();
+
     void analyse();
     void build_tree();
     string encode(char c);

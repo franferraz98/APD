@@ -135,3 +135,7 @@ Huffman::Huffman(string s) : str(s){
     analyse();
     build_tree();
 }
+
+Huffman::~Huffman(){
+    delete(this->root);
+}
