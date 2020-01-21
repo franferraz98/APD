@@ -13,29 +13,29 @@ double compressionRatio(string s){
     // BURROWS-WHEELER
     string comp = BurrowsWheeler::compress(s.c_str());
     //MTF
-    //char *movComp = MoveToFront::compress(comp.c_str(), comp.length());
+    char *movComp = MoveToFront::compress(comp.c_str(), comp.length());
     //HUFFMAN
-    Huffman h1(comp);
+    Huffman h1(movComp);
 
-	//string huffCod = h1.encode(comp);
-    double ratio = (double)((comp.length()+7) / 8)/s.length();
+    string huffCod = h1.encode(movComp);
+    double ratio = (double)((huffCod.length()+7) / 8)/s.length();
 
     //HUFFMAN
-	//string huffDec = h1.decode(huffCod);    
+	string huffDec = h1.decode(huffCod);    
 
     //MTF
-    //char *movDec = MoveToFront::decompress(huffDec.c_str(), comp.length());
+    char *movDec = MoveToFront::decompress(huffDec.c_str(), huffDec.length());
     
     //BURROWS-WHEELER
-    string dec = BurrowsWheeler::decompress(comp.c_str());
+    string dec = BurrowsWheeler::decompress(movDec);
     if(strcmp(s.c_str(), dec.c_str()) != 0){
         cout << s << endl << endl;
         cout << dec << endl;
         throw;
     }
 
-    //delete(movComp);
-    //delete(movDec);
+    delete(movComp);
+    delete(movDec);
     return ratio;
 }
 
@@ -58,30 +58,24 @@ int main(){
                 // Discard non ASCII chars
                 for(int i = 0; i < str.length(); i++){
                     str[i] = max(str[i], ' ');
+                    str[i] = min(str[i],char(127));
                 }
 
                 auto t1 = std::chrono::high_resolution_clock::now();
-                if(file._s.st_size > str.length() + 76){
-                    cout << "Difference: " << file._s.st_size << " " << str.length() << endl;
-                    cout << str << endl;
-                    throw;
-                }
 
                 double comp = compressionRatio(str);
                 auto t2 = std::chrono::high_resolution_clock::now();
-                auto time = std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count();
+                auto time = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count();
 
                 cout <<  file.name << ";" << file._s.st_size << ";" << comp << ";" << time << endl;
 
-                //td::cout << time << std::endl;
+                strStream.clear();
             }
             ifs.close();
         }
         tinydir_next(&dir);
     }
     tinydir_close(&dir);
-
-    //cout << "Compression ratio: " << compressionRatio(s) << endl;
 
     return 0;
 }

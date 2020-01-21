@@ -61,7 +61,7 @@ std::string BurrowsWheeler::decompress(const char * c){
         }
     }
     if (!found){
-        throw;
+        std::cout << "WTF" << std::endl;
     }
 
     // Reconstruir la cadena original iterando la columna de la izda

@@ -1,7 +1,7 @@
 #ifndef VECTORSUFIJOS_HH
 #define VECTORSUFIJOS_HH
 
-#define EOF_CHAR 3
+#define EOF_CHAR (unsigned char)(3)
 
 struct Sufijo 
 { 
@@ -22,7 +22,6 @@ public:
     int len() const;
 
     void print();
-    void radix(const int col, const int j_0, const int j_f);
     void ordenar();
     int indice(int idx) const;
 
