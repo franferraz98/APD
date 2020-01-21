@@ -50,11 +50,13 @@ void VectorSufijos::radix(const int col, const int j_0, const int j_f){
 }
 void VectorSufijos::ordenar(){
     int *indices2 = (int*)malloc(tam * sizeof(int));
-    mempcpy(indices2, indices, tam * sizeof(int));
+    memcpy(indices2, indices, tam * sizeof(int));
 
     // Ordenar esos indices segun los sufijos en orden alfabetico
     std::sort(indices, indices + tam, [this](int a, int b) {return strcmp(cad+a, cad+b) < 0;});
 
+
+    /*
     std::cout << std::endl;
     for(int i = 0; i < tam; i++){
         std::cout << indices[i] << ", ";
@@ -72,6 +74,7 @@ void VectorSufijos::ordenar(){
     if(memcmp(indices2, indices, tam * sizeof(int)) != 0){
         throw;
     }
+    */
 }
 
 int VectorSufijos::indice(int idx) const{
