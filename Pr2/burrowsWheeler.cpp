@@ -4,6 +4,8 @@
 #include <tuple>
 #include <iostream>
 
+
+
 typedef std::tuple<char, char> tuplaChars;
 typedef std::tuple<char, int> tuplaCharIndex;
 
@@ -49,11 +51,11 @@ std::string BurrowsWheeler::decompress(const char * c){
     
     // Buscar principio de la cadena (caracter dolar)
     std::string res(c);
-    int idxIzda = 0;
+    int idxDcha = 0;
     bool found = false;
     for(int i = 0; i < l; i++){
-        if(std::get<0>(colIzda[i]) == '$'){
-            idxIzda = i;
+        if(std::get<0>(colIzda[i]) == EOF_CHAR){
+            idxDcha = i;
             found = true;
             break;
         }
@@ -63,10 +65,10 @@ std::string BurrowsWheeler::decompress(const char * c){
     }
 
     // Reconstruir la cadena original iterando la columna de la izda
-    idxIzda = std::get<1>(colIzda[idxIzda]);
+    idxDcha = std::get<1>(colIzda[idxDcha]);
     for(int i = 0; i < l; i++){
-        res[i] = std::get<0>(colIzda[idxIzda]);
-        idxIzda = std::get<1>(colIzda[idxIzda]);
+        res[i] = std::get<0>(colIzda[idxDcha]);
+        idxDcha = std::get<1>(colIzda[idxDcha]);
     }
     
     // Eliminar el caracter $ del final

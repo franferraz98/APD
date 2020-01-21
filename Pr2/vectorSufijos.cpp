@@ -87,19 +87,17 @@ VectorSufijos::VectorSufijos(const char * c){
     this->tam = l;
 
     // Guardar cadena original con $ al final
-    this->cad = (char*)malloc((l*2)*sizeof(char));
+    this->cad = (char*)malloc(l*sizeof(char));
     strcpy(this->cad,c);
-    this->cad[l-1] = '$';
-    for(int i = l ; i < l*2; i++){
-         this->cad[i] = '\0';
-    }
+    this->cad[l-1] = EOF_CHAR;
+    this->cad[l] = '\0';
    
 
     // Crear vector de indices
-    this->indices = (int*)malloc((l+1)*sizeof(int));
-    for(int i = 0; i <= l; i++){
+    this->indices = (int*)malloc(l*sizeof(int));
+    for(int i = 0; i < l; i++){
         indices[i] = i;
-    }    
+    }
 }
 
 VectorSufijos::~VectorSufijos(){

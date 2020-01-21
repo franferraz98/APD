@@ -15,7 +15,7 @@ double compressionRatio(string s){
     //MTF
     //char *movComp = MoveToFront::compress(comp.c_str(), comp.length());
     //HUFFMAN
-    //Huffman h1(comp);
+    Huffman h1(comp);
 
 	//string huffCod = h1.encode(comp);
     double ratio = (double)((comp.length()+7) / 8)/s.length();
@@ -50,10 +50,17 @@ int main(){
         if(!file.is_dir){
             ifstream ifs(file.path);
             if(ifs.is_open()){
-                auto t1 = std::chrono::high_resolution_clock::now();
+                // Read file to string
                 std::stringstream strStream;
-                strStream << ifs.rdbuf(); //read the file
-                std::string str = strStream.str(); //str holds the content of the file
+                strStream << ifs.rdbuf();
+                std::string str = strStream.str();
+
+                // Discard non ASCII chars
+                for(int i = 0; i < str.length(); i++){
+                    str[i] = max(str[i], ' ');
+                }
+
+                auto t1 = std::chrono::high_resolution_clock::now();
                 if(file._s.st_size > str.length() + 76){
                     cout << "Difference: " << file._s.st_size << " " << str.length() << endl;
                     cout << str << endl;

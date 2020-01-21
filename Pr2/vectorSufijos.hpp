@@ -1,6 +1,8 @@
 #ifndef VECTORSUFIJOS_HH
 #define VECTORSUFIJOS_HH
 
+#define EOF_CHAR 3
+
 struct Sufijo 
 { 
     int indice; // To store original index 
